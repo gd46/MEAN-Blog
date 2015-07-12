@@ -1,0 +1,27 @@
+{
+  "name": "Blog",
+  "version": "1.0.0",
+  "description": "MEAN Stack Blog",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gd46/MEAN-Blog.git"
+  },
+  "author": "Giuseppe DiBella",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/gd46/MEAN-Blog/issues"
+  },
+  "homepage": "https://github.com/gd46/MEAN-Blog",
+  "dependencies": {
+    "bcrypt-nodejs": "0.0.3",
+    "body-parser": "^1.12.2",
+    "express": "^4.12.3",
+    "jsonwebtoken": "^5.0.0",
+    "mongoose": "^4.0.1",
+    "morgan": "^1.5.2"
+  }
+}
