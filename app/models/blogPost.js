@@ -10,8 +10,8 @@ var BlogPostSchema = new Schema({
   },
   caption: String,
   description: String,
-  user: {
-    type: Schema.types.ObjectId,
+  author: {
+    type: Schema.ObjectId,
     ref: 'User'
   }
 });

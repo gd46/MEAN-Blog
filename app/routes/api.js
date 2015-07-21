@@ -1,5 +1,6 @@
 var bodyParser = require('body-parser'),
   BlogPost = require('../models/blogPost'),
+  User = require('../models/user'),
   config = require('../../config.js');
 
 
@@ -16,6 +17,41 @@ module.exports = function(app, express){
       message: 'Welcome to api'
     });
   });
+
+  apiRouter.route('/users')
+
+    .post(function(req,res){
+
+      var user = new User();
+      user.username = req.body.username;
+      user.email = req.body.email;
+      user.firstname = req.body.firstname;
+      user.lastname = req.body.lastname;
+
+      user.save(function(err){
+        if(err){
+          return res.json({
+            success: false,
+            message: 'Failed to create user ' + err
+          });
+        };
+        res.json({
+          success: true,
+          message: 'Successfully created user'
+        });
+      });
+    })
+
+    .get(function(req, res){
+
+      User.find(function(err, user){
+        if(err){
+          res.send(err);
+        } else{
+          res.json(user);
+        }
+      });
+    });
 
   apiRouter.route('/blog')
 
@@ -34,6 +70,7 @@ module.exports = function(app, express){
           });
         }
         res.json({
+          success: true,
           message: 'Sucessfully created blog post'
         })
       });
