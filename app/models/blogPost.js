@@ -9,7 +9,11 @@ var BlogPostSchema = new Schema({
     required: true
   },
   caption: String,
-  description: String
+  description: String,
+  user: {
+    type: Schema.types.ObjectId,
+    ref: 'User'
+  }
 });
 
 module.exports = mongoose.model('BlogPost', BlogPostSchema);
