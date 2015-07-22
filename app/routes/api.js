@@ -61,6 +61,7 @@ module.exports = function(app, express){
       post.title = req.body.title;
       post.caption = req.body.caption;
       post.description = req.body.description;
+      post.author = req.user;
 
       post.save(function(err){
         if(err){

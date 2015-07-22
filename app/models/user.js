@@ -11,11 +11,7 @@ var UserSchema = new Schema({
     unique: true,
   },
   firstname: String,
-  lastname: String,
-  posts: {
-    type: Schema.ObjectId,
-    ref: 'BlogPost'
-  }
+  lastname: String
 });
 
 module.exports = mongoose.model('User', UserSchema);

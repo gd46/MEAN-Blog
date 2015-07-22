@@ -11,7 +11,7 @@ var BlogPostSchema = new Schema({
   caption: String,
   description: String,
   author: {
-    type: Schema.ObjectId,
+    type: Schema.Types.ObjectId,
     ref: 'User'
   }
 });
