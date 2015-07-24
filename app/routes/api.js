@@ -1,16 +1,90 @@
 var bodyParser = require('body-parser'),
   BlogPost = require('../models/blogPost'),
+  jwt = require('jsonwebtoken'),
   User = require('../models/user'),
-  config = require('../../config.js');
-
+  config = require('../../config.js'),
+  superSecret = config.secret
 
 module.exports = function(app, express){
   var apiRouter = express.Router();
 
-  // apiRouter.use(function(req,res,next){
-  //   console.log('Somebody just came to our app');
-  //   next();
-  // });
+  apiRouter.post('/authenticate', function(req, res) {
+    User.findOne({
+      username: req.body.username,
+    }).select('name username password').exec(function(err, user) {
+      if (err) throw err;
+
+      // No user with that user was found
+      if (!user) {
+        res.json({
+          success: false,
+          message: 'Authentication failed. User not found.'
+        });
+      } else if (user) {
+
+        // Check if password matches
+        var validPassword = user.comparePassword(req.body.password);
+        if (!validPassword) {
+          res.json({
+            success: false,
+            message: 'Authentication failed. Wrong password.'
+          });
+        } else {
+
+          // If user is found and password is right
+
+          // Create a token
+          var token = jwt.sign({
+            name: user.name,
+            username: user.username
+          }, superSecret, {
+            expiresInMinutes: 1440 // Expires in 24 hours
+          });
+
+          res.json({
+            success: true,
+            message: 'Enjoy your token!',
+            token: token
+          });
+        }
+      }
+    });
+  });
+
+  app.use(function(req, res, next) {
+
+    // check header or url parameters or post parameters for token”
+    var token = req.body.token || req.param('token') || req.headers['x-access-token'];
+
+    // decode token
+    if (token) {
+
+      // verifies secret and checks exp
+      jwt.verify(token, superSecret, function(err, decoded) {
+        if (err) {
+          return res.status(403).send({
+            success: false,
+            message: 'Failed to authenticate token'
+          });
+        } else {
+
+          // if everything is good save the request for use in other routes
+          req.decoded = decoded;
+          next();
+        }
+      });
+    } else {
+
+      // if there is no token return a http response
+      // of 403(access forbidden) and error message
+
+      return res.status(403).send({
+        success: false,
+        message: 'No token provided'
+      });
+
+    }
+  });
 
   apiRouter.get('/', function(req, res){
     res.json({
